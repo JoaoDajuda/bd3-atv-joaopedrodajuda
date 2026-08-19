@@ -1,5 +1,6 @@
 const database = 'BD3-NoSQL-AtlasMongoDB';
 use(database);
+// Questão A
 db['bd3-nosql-atv1'].insertMany(
     [
         
@@ -114,9 +115,9 @@ db['bd3-nosql-atv1'].insertMany(
             "data_nascimento": "01/03/2005"
         },
     ]); 
-// Questão A
+// Questão B
 db['bd3-nosql-atv1'].find();
-// Questão B 
+// Questão C 
 db['bd3-nosql-atv1'].find({"cpf": "89384828528"}, {"cod_aluno": 0});
-// Questão C
+// Questão D
 db['bd3-nosql-atv1'].find({"cpf": "89384828528"}, {"cod_aluno": 0, "cod_turma": 0});
