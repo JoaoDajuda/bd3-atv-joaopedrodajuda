@@ -1,6 +1,5 @@
-const database = 'BD3-NoSQL-Produtos';
+use('BD3-NoSQL-Produtos');
 const collection = 'BD3-NoSQL-Produtos';
-use(database);
 
 //B
 db[collection].find({
@@ -10,7 +9,7 @@ db[collection].find({
 db[collection].find({
     valor:{$lt:450}
 });
-//D
+// D
 db[collection].find({
-    valor:{gte: 500,$lte:950}
+    valor:{$gte: 500,$lte:950}
 });
