@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+
+<html lang="pt-br">
+
+    <head>
+
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Chat - Firestore</title>
+        <link rel="stylesheet" href="styles.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.js"></script>
+        <script src="https://cdn.socket.io/4.8.4/socket.io.min.js"></script>
+
+    </head>
+
+    <body>
+
+        <div class="container">
+        
+            <h1>Chat em tempo real</h1>
+
+            <form id="chat">
+
+                <input type="text" name="username" placeholder="Digite seu nome" autocomplete="name" required>
+                <br>
+                <input type="text" name="message" placeholder="Digite sua mensagem" required>
+                <br>
+                <button type="submit">Enviar</button>
+            </form>
+
+            <p class="error" role="alert" aria-live="polite"></p>
+            <div class="messages" aria-live="polite"></div>
+        </div>
+
+        <script>
+            const socket = io();
+
+            function renderMessage(message) {
+                const entry = $('<div>').addClass('message');
+                const heading = $('<strong>').text(
+                    `${message.author || 'Anônimo'} ${message.data_hora || ''}`
+                );
+
+                entry.append(heading, document.createTextNode(`: ${message.message || ''}`));
+                $('.messages').append(entry);
+            }
+
+            socket.on('connect', function() {
+                socket.emit('previousMessage');
+            });
+
+            socket.on('previousMessage', function(messages) {
+                $('.messages').empty();
+                for (const message of messages) {
+                    renderMessage(message);
+                }
+            });
+
+            socket.on('receivedMessage', function(message) {
+                renderMessage(message);
+            });
+
+            $('#chat').submit(function(event) {
+                event.preventDefault();
+
+                const author = $('input[name=username]').val().trim();
+                const message = $('input[name=message]').val().trim();
+                const error = $('.error');
+                error.text('');
+
+                if (!author || !message) {
+                    error.text('Informe seu nome e uma mensagem.');
+                    return;
+                }
+
+                socket.emit('sendMessage', { author, message }, function(response) {
+                    if (!response?.ok) {
+                        error.text(response?.error || 'Não foi possível enviar a mensagem.');
+                        return;
+                    }
+
+                    $('input[name=message]').val('').trigger('focus');
+                });
+            });
+        </script>
+
+    </body>
+
+</html>

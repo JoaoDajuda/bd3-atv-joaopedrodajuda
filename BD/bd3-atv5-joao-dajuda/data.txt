@@ -1,0 +1,1 @@
+let data_hora_msg = `[${data_hora_obj.getDate()}/${data_hora_obj.getMonth()}/${data_hora_obj.getFullYear()}-${data_hora_obj.getHours()}: ${data_hora_obj.getMinutes()}:${data_hora_obj.getSeconds()}]`;
